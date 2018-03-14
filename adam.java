@@ -1,5 +1,7 @@
 import java.util.ArrayList;
 
+import javax.swing.JOptionPane;
+
 public class adam{
 
     // Contains info about each admin
@@ -70,6 +72,26 @@ public class adam{
             leagueDetails.get(1).add(i);
             leagueDetails.get(2).add("leaguetitle" + i);
         }
+    }
+
+    public boolean createNewLeague(){
+
+        String  leagueTitle,
+                pattern = "[a-z0-9 ]{1,}",
+                teamName = "";
+        ArrayList<String> teams = new ArrayList<String>();
+
+        leagueTitle = JOptionPane.showInputDialog(null, "Enter league title:");
+
+        if( !leagueTitle.matches(pattern) || leagueTitle == null ){
+            JOptionPane.showMessageDialog(null, "Please enter a valid league title.");
+        } else {
+            while( teamName != null ){
+                teamName = JOptionPane.showInputDialog(null, "Enter next team name:");
+            }
+        }
+
+        return false;
     }
 
     public static void main(String[] args) {
