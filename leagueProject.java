@@ -9,6 +9,8 @@ public class leagueProject{
 	public static ArrayList<ArrayList> fixtureDetails = new ArrayList<ArrayList>();
 	public static ArrayList<ArrayList> resultDetails = new ArrayList<ArrayList>();
 
+	public static int adminID = -1;
+
 	public static Scanner in;
 	public static PrintWriter writer;
 
@@ -62,6 +64,21 @@ public class leagueProject{
 		}
 		return false;
     }
+
+    public static boolean attemptLogin(Arraylist Arr){
+    	String Password, Username, cPassword, cUsername;
+    	Username = JOptionPane.showInputDialog(null, "Please enter your Username")
+		Password = JOptionPane.showInputDialog(null, "Please enter your Password")
+    	for(int i = 0; i < Arr.get(1).size(); i++){
+    		cUsername = Arr.get(1).get(i);
+    		cPassword = Arr.get(2).get(i);
+    		if(cUsername.equals(Username) && cPassword.equals(Password)){
+    			adminID = i;
+    			return true;
+    		}
+    	}
+    }
+
 
 	public static void main(String[] args) throws IOException{
 		init();
