@@ -46,6 +46,7 @@ public class leagueProject{
 		}
 	}
 
+	// Adam O'Brien
 	public static boolean loadFileToArray(String fileLoc, ArrayList<ArrayList> arr) throws IOException{
 		File file = new File(fileLoc);
 		if( file.exists() ){
@@ -79,8 +80,48 @@ public class leagueProject{
     	}
     }
 
+	public static createNewLeague(){
+		// Ask user for league title
+		// Ask user to add teams to the league
+		// Show league details to user
+		// Ask if user accepts the details
+		// Save data to files
+		return false;
+	}
+
+	public static editLeague(int leagueID){
+		// Display options about which part of the league needs to be changed
+
+		// Title
+		// Ask user to input new title
+
+		// Teams
+		// Allow user to remove teams from arraylist
+		// Allow user to add teams to arraylist
+
+		// Results
+		// Loop through each game
+		// Display result
+		// Ask user if they want to change it
+		// Allow user to skip to end of list and finish editing
+
+		// Save edited data to file
+	}
+
+	public static generateResults(int leagueID){
+		// Check that results have been entered for selected league
+		// Calculate points for each team
+		// Display list with teams (points descending)
+		// Save generated results to file
+	}
+
+	public static generateFixtures(int leagueID){
+		// Look through annettes code for fixture generation
+	}
 
 	public static void main(String[] args) throws IOException{
 		init();
+
+		// Menu handling
 	}
 }
