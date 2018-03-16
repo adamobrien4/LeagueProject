@@ -68,8 +68,8 @@ public class leagueProject{
 
     public static boolean attemptLogin(Arraylist Arr){
     	String Password, Username, cPassword, cUsername;
-    	Username = JOptionPane.showInputDialog(null, "Please enter your Username")
-		Password = JOptionPane.showInputDialog(null, "Please enter your Password")
+    	Username = JOptionPane.showInputDialog(null, "Please enter your Username");
+		Password = JOptionPane.showInputDialog(null, "Please enter your Password");
     	for(int i = 0; i < Arr.get(1).size(); i++){
     		cUsername = Arr.get(1).get(i);
     		cPassword = Arr.get(2).get(i);
