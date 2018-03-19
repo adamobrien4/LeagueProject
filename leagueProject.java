@@ -94,11 +94,11 @@ public class leagueProject{
 		// Display options about which part of the league needs to be changed
 		if(attempLogin() == true){
 		int dir;
-		dir = JOptionPane.showInputDialog(null, "To display all leagues and alter a league title, Enter "0" " + /n + "To Add or Remove teams from a 
-			selected league, Enter "1" ")
+		dir = JOptionPane.showInputDialog(null, "To display all leagues and alter a league title, Enter \"0\" " + \n + "To Add or Remove teams from a 
+			selected league, Enter \"1\"" + \n + "To check results of each game within a league or to alter results, Enter \"2\"")
 		leagueDirectory(dir);
 
-	}
+		}
 		// Title
 		// Ask user to input new title
 
@@ -126,7 +126,7 @@ public class leagueProject{
 				usersLeagues.add.leagueDetails.get(2).get(i);
 			}
 		}
-		JOptionPane.showMessageDialog(null, "Here is a list of all leagues owned by " + Username + ":"+ /n + usersLeagues);
+		JOptionPane.showMessageDialog(null, "Here is a list of all leagues owned by " + Username + ":" + /n + usersLeagues);
 		// Prompt user to select a league from a list of leagues that they have created
 		selectedLeague = JOptionPane.showInputDialog(null, "Which league would you like to change?");
 		newTitle = JOptionPane.showInputDialog(null, "Enter new league title");
