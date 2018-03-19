@@ -65,9 +65,9 @@ public class leagueProject{
 		}
 		return false;
     }
-
+    // Tedis Stumbrs
     public static boolean attemptLogin(Arraylist Arr){
-    	String Password, Username, cPassword, cUsername;
+    	public String Password, Username, cPassword, cUsername;
     	Username = JOptionPane.showInputDialog(null, "Please enter your Username");
 		Password = JOptionPane.showInputDialog(null, "Please enter your Password");
     	for(int i = 0; i < Arr.get(1).size(); i++){
@@ -89,9 +89,16 @@ public class leagueProject{
 		return false;
 	}
 
+	// Tedis Stumbrs
 	public static editLeague(int leagueID){
 		// Display options about which part of the league needs to be changed
+		if(attempLogin() == true){
+		int dir;
+		dir = JOptionPane.showInputDialog(null, "To display all leagues and alter a league title, Enter "0" " + /n + "To Add or Remove teams from a 
+			selected league, Enter "1" ")
+		leagueDirectory(dir);
 
+	}
 		// Title
 		// Ask user to input new title
 
@@ -107,6 +114,41 @@ public class leagueProject{
 
 		// Save edited data to file
 	}
+
+	public static leagueDirectory(int dir){
+	// If login is successful will direct to a list of leagues owned by the admin
+	// Separate total leagues into from leagues created by admin
+		if(dir == 0){
+		public Arraylist<String> usersLeagues;
+		public String selectedLeague, newTitle;
+		for(int i = 0; i < leagueDetails.size(); i++){
+			if(leagueDetails.get(0).get(i) == adminID){
+				usersLeagues.add.leagueDetails.get(2).get(i);
+			}
+		}
+		JOptionPane.showMessageDialog(null, "Here is a list of all leagues owned by " + Username + ":"+ /n + usersLeagues);
+		// Prompt user to select a league from a list of leagues that they have created
+		selectedLeague = JOptionPane.showInputDialog(null, "Which league would you like to change?");
+		newTitle = JOptionPane.showInputDialog(null, "Enter new league title");
+		for(int n = 0; n < leagueDetails.size(); n++){
+			if(leagueDetails.get(2).get(n) == selectedLeague){
+				leagueDetails.get(2).get(n) = newTitle;
+			}
+		}
+		for(int x = 0; x < usersLeagues.size(); x++){
+			if(usersLeagues.get(x) == selectedLeague){
+				usersLeagues.get(x) = newTitle;
+			}
+		}
+		JOptionPane.showMessageDialog(null, "Here is an updated list of all leagues owned by " + Username + ":"+ /n + usersLeagues);
+	}
+	if(dir == 1){
+		
+	}
+
+}
+
+
 
 	public static generateResults(int leagueID){
 		// Check that results have been entered for selected league
