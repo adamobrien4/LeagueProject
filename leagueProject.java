@@ -119,7 +119,7 @@ public class leagueProject{
 	// If login is successful will direct to a list of leagues owned by the admin
 	// Separate total leagues into from leagues created by admin
 		if(dir == 0){
-		public Arraylist<String> usersLeagues;
+		public Arraylist<String> usersLeagues = new ArrayList<String>();
 		public String selectedLeague, newTitle;
 		for(int i = 0; i < leagueDetails.size(); i++){
 			if(leagueDetails.get(0).get(i) == adminID){
@@ -143,7 +143,7 @@ public class leagueProject{
 		JOptionPane.showMessageDialog(null, "Here is an updated list of all leagues owned by " + Username + ":"+ /n + usersLeagues);
 	}
 	if(dir == 1){
-		
+
 	}
 
 }
