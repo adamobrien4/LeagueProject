@@ -126,7 +126,7 @@ public class leagueProject{
 				usersLeagues.add.leagueDetails.get(2).get(i);
 			}
 		}
-		JOptionPane.showMessageDialog(null, "Here is a list of all leagues owned by " + Username + ":" + /n + usersLeagues);
+		JOptionPane.showMessageDialog(null, "Here is a list of all leagues owned by " + Username + ":" + \n + usersLeagues);
 		// Prompt user to select a league from a list of leagues that they have created
 		selectedLeague = JOptionPane.showInputDialog(null, "Which league would you like to change?");
 		newTitle = JOptionPane.showInputDialog(null, "Enter new league title");
@@ -140,7 +140,7 @@ public class leagueProject{
 				usersLeagues.get(x) = newTitle;
 			}
 		}
-		JOptionPane.showMessageDialog(null, "Here is an updated list of all leagues owned by " + Username + ":"+ /n + usersLeagues);
+		JOptionPane.showMessageDialog(null, "Here is an updated list of all leagues owned by " + Username + ":"+ \n + usersLeagues);
 	}
 	if(dir == 1){
 
