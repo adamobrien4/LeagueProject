@@ -74,7 +74,7 @@ public class leagueProject{
     		cUsername = adminDetails.get(1).get(i).toString();
     		cPassword = adminDetails.get(2).get(i).toString();
     		if(cUsername.equals(Username) && cPassword.equals(Password)){
-    			adminID = i;
+    			adminID = Integer.parseInt(adminDetails.get(0).get(i).toString());
     			return true;
     		}
 		}
@@ -118,14 +118,14 @@ public class leagueProject{
 	// Separate total leagues from leagues created by admin
 		if(dir == 0){
 			ArrayList<String> usersLeagues = new ArrayList<String>();
-			String selectedLeague, newTitle;
+			String selectedLeague0, newTitle;
 			for(int i = 0; i < leagueDetails.size(); i++){
-				if(leagueDetails.get(0).get(i) == adminID){
+				if(Integer.parseInt(leagueDetails.get(0).get(i).toString()) == adminID){
 					usersLeagues.add(leagueDetails.get(2).get(i).toString());
 				}
 			}
 			// Display list of leagues that the user created
-			JOptionPane.showMessageDialog(null, "Here is a list of all leagues owned by " + Username + ":" + "\n" + usersLeagues);
+			JOptionPane.showMessageDialog(null, "Here is a list of all leagues owned by user " + adminID + ":" + "\n" + usersLeagues.toString());
 			// Prompt user to select a league from the list
 			selectedLeague0 = JOptionPane.showInputDialog(null, "Which league would you like to change?");
 			// Ask user to enter new title for selected league
@@ -133,16 +133,16 @@ public class leagueProject{
 			// Simply switching the titles of the leagues for both the total leagues and users leagues
 			for(int j = 0; j < leagueDetails.size(); j++){
 				if(leagueDetails.get(2).get(j) == selectedLeague0){
-					newTitle = leagueDetails.get(2).get(j);
+					newTitle = leagueDetails.get(2).get(j).toString();
 				}
 			}
 			for(int k = 0; k < usersLeagues.size(); k++){
 				if(usersLeagues.get(k) == selectedLeague0){
-					newTitle = usersLeagues.get(k);
+					newTitle = usersLeagues.get(k).toString();
 				}
 			}
 			// Display list of leagues post edit
-			JOptionPane.showMessageDialog(null, "Here is an updated list of all leagues owned by " + Username + ":"+ "\n" + usersLeagues);
+			JOptionPane.showMessageDialog(null, "Here is an updated list of all leagues owned by user " + adminID + ":"+ "\n" + usersLeagues.toString());
 		}
 		// User wishes to access teams in a league
 		if(dir == 1){
@@ -151,11 +151,11 @@ public class leagueProject{
 			String selectedLeague1, newTeam, removedTeam;
 			int id, dir1, newID;
 			// Display list of leagues belonging to user
-			JOptionPane.showMessageDialog(null, "Here is a list of all leagues owned by " + Username + ":" + "\n" + usersLeagues);
+			JOptionPane.showMessageDialog(null, "Here is a list of all leagues owned by " + Username + ":" + "\n" + usersLeagues.toString());
 			selectedLeague1 = JOptionPane.showInputDialog(null, "Which league would you like to access?");
 			// Loop through selected league matching League ID to leagueTeam ID 
 			for(int i = 0; i < leagueDetails.size(); i++){
-				if(leagueDetails.get(2).get(i) == selectedleague1){
+				if(leagueDetails.get(2).get(i).toString() == selectedleague1){
 					id = i;
 				}
 			}
@@ -166,9 +166,9 @@ public class leagueProject{
 				}
 			}
 			// Display teams in selected league
-			JOptionPane.showMessageDialog(null, "Here is a list of all the teams in " + selectedLeague1 + ":" + "\n" + teams);
+			JOptionPane.showMessageDialog(null, "Here is a list of all the teams in " + selectedLeague1.toString() + ":" + "\n" + teams.toString());
 			// Create another directory for adding or removing teams
-			dir1 = JOptionPane.showInputDialog(null, "To add a new team to the league, Enter : \"1\" \nTo remove a team from the league, Enter : \"2\"");
+			dir1 = Integer.parseInt(JOptionPane.showInputDialog(null, "To add a new team to the league, Enter : \"1\" \nTo remove a team from the league, Enter : \"2\""));
 			// Add new team
 			if(dir1 == 1){
 				newTeam = JOptionPane.showInputDialog(null, "Enter new team name");
@@ -192,7 +192,7 @@ public class leagueProject{
 		// Will complete tomorrow
 	}
 
-	public static void generateResults(int leagueID){
+/*	public static void generateResults(int leagueID){
 		// Check that results have been entered for selected league
 		// Calculate points for each team
 		// Display list with teams (points descending)
@@ -201,11 +201,11 @@ public class leagueProject{
 
 	public static void generateFixtures(int leagueID){
 		// Look through annettes code for fixture generation
-	}
+	}*/
 
 	public static void main(String[] args) throws IOException{
 		init();
-
+		AttemptLogin();
 		// Menu handling
 	}
 }
