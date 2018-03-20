@@ -4,7 +4,7 @@ import javax.swing.*;
 
 public class leagueProject{
 	public static ArrayList<ArrayList<String>> adminDetails = new ArrayList<ArrayList<String>>();
-	public static ArrayList<ArrayList> leagueDetails = new ArrayList<ArrayList<String>>();
+	public static ArrayList<ArrayList<String>> leagueDetails = new ArrayList<ArrayList<String>>();
 	public static ArrayList<String> leagueTeams = new ArrayList<String>();
 	public static ArrayList<ArrayList<String>> fixtureDetails = new ArrayList<ArrayList<String>>();
 	public static ArrayList<ArrayList<String>> resultDetails = new ArrayList<ArrayList<String>>();
@@ -44,7 +44,7 @@ public class leagueProject{
 	}
 
 	// Adam O'Brien
-	public static boolean loadFileToArray(String fileLoc, ArrayList<ArrayList> arr) throws IOException{
+	public static boolean loadFileToArray(String fileLoc, ArrayList<ArrayList<String>> arr) throws IOException{
 		File file = new File(fileLoc);
 		if( file.exists() ){
 			in = new Scanner(file);
@@ -139,54 +139,47 @@ public class leagueProject{
 				}
 			}
 			// Display list of leagues post edit
-			JOptionPane.showMessageDialog(null, "Here is an updated list of all leagues owned by user " + adminID + ":"+ "\n" + usersLeagues.toString());
+			JOptionPane.showMessageDialog(null, "Here is an updated list of all leagues owned by user " + adminID + ":"+ "\n" + usersLeagues);
 		}
 		// User wishes to access teams in a league
 		if(dir == 1){
-			ArayList<String> teams = new ArrayList<String>();
+			ArrayList<String> teams = new ArrayList<String>();
 			ArrayList<String> removedTeams = new ArrayList<String>();
 			String selectedLeague1, newTeam, removedTeam;
 			int id, dir1, newID;
 			// Display list of leagues belonging to user
-			JOptionPane.showMessageDialog(null, "Here is a list of all leagues owned by " + Username + ":" + "\n" + usersLeagues.toString());
-			selectedLeague1 = JOptionPane.showInputDialog(null, "Which league would you like to access?");
-			// Loop through selected league matching League ID to leagueTeam ID 
-			for(int i = 0; i < leagueDetails.size(); i++){
-				if(leagueDetails.get(2).get(i).toString() == selectedleague1){
-					id = i;
+			JOptionPane.showMessageDialog(null, "Here is a list of all leagues owned by user " + adminID + ":" + "\n" + usersLeagues);
+			selectedLeague1 = JOptionPane.showInputDialog(null, "Here is a list of all leagues owned by user " + adminID + ":" + "\n" + usersLeagues + \n + \n + "Which league would you like to access?");
+				// Display teams in selected league
+				JOptionPane.showMessageDialog(null, "Here is a list of all the teams in " + selectedLeague1 + ":" + "\n" + leagueTeams);
+				// Create another directory for adding or removing teams
+				dir1 = Integer.parseInt(JOptionPane.showInputDialog(null, "To add a new team to the league, Enter : \"1\" " + "\n" + "To remove a team from the league, Enter : \"2\""));
+				
+				if(dir1 == 1){
+				addTeam(selectedLeague1);
+				}
+
+			
+	}
+	public static void removeTeam(String s){
+		
+	}
+
+
+
+
+
+
+	public static void addTeam(String s){
+		for(int i = 0; i < leagueTeams.size(); i++){
+				newTeam = JOptionPane.showInputDialog(null, "Enter title of new team" + \n + "To finish adding teams, type \"next\"");
+				if(newTeam == "next"){
+					leagueDirectory();
+				}
+				else{
+					leagueTeams.add(newTeam);
 				}
 			}
-			// Adding teams with matching ID's to seperate ArrayList for this specific leagues teams
-			for(int i = 0; i < leagueTeams.size(); i ++){
-				if(leagueTeams.get(0).get(i) == id){
-					teams.add(leagueTeams.get(0).get(i));		
-				}
-			}
-			// Display teams in selected league
-			JOptionPane.showMessageDialog(null, "Here is a list of all the teams in " + selectedLeague1.toString() + ":" + "\n" + teams.toString());
-			// Create another directory for adding or removing teams
-			dir1 = Integer.parseInt(JOptionPane.showInputDialog(null, "To add a new team to the league, Enter : \"1\" \nTo remove a team from the league, Enter : \"2\""));
-			// Add new team
-			if(dir1 == 1){
-				newTeam = JOptionPane.showInputDialog(null, "Enter new team name");
-			// Add new team to new ArrayList for league specific teams
-				teams.add(newTeam);
-			// Add new team and new team ID to main list of teams 
-				leagueTeams.get(1).add(newTeam);
-				leagueTeams.get(0).add(id);
-			}
-		}
-		// Remove a team
-/*		if(dir1 == 2){
-			JOptionPane.showMessageDialog(null, "List of teams currently in your league" + selectedLeague1 + ":" + "\n" + teams);
-			removedTeam = JOptionPane.showInputDialog(null, "Enter team you would like to remove");
-
-			for(int i = 0; i < teams.length(); i++0){
-
-			}
-
-		}*/
-		// Will complete tomorrow
 	}
 
 /*	public static void generateResults(int leagueID){
