@@ -3,11 +3,11 @@ import java.io.*;
 import javax.swing.*;
 
 public class leagueProject{
-	public static ArrayList<ArrayList> adminDetails = new ArrayList<ArrayList>();
-	public static ArrayList<ArrayList> leagueDetails = new ArrayList<ArrayList>();
-	public static ArrayList<ArrayList> leagueTeams = new ArrayList<ArrayList>();
-	public static ArrayList<ArrayList> fixtureDetails = new ArrayList<ArrayList>();
-	public static ArrayList<ArrayList> resultDetails = new ArrayList<ArrayList>();
+	public static ArrayList<ArrayList<String>> adminDetails = new ArrayList<ArrayList<String>>();
+	public static ArrayList<ArrayList> leagueDetails = new ArrayList<ArrayList<String>>();
+	public static ArrayList<String> leagueTeams = new ArrayList<String>();
+	public static ArrayList<ArrayList<String>> fixtureDetails = new ArrayList<ArrayList<String>>();
+	public static ArrayList<ArrayList<String>> resultDetails = new ArrayList<ArrayList<String>>();
 
 	public static int adminID = -1;
 
@@ -15,24 +15,21 @@ public class leagueProject{
 	public static PrintWriter writer;
 
 	public static void init() throws IOException{
-		adminDetails.add(new ArrayList<Integer>());
+		adminDetails.add(new ArrayList<String>());
 		adminDetails.add(new ArrayList<String>());
 		adminDetails.add(new ArrayList<String>());
 
-		leagueDetails.add(new ArrayList<Integer>());
-		leagueDetails.add(new ArrayList<Integer>());
+		leagueDetails.add(new ArrayList<String>());
+		leagueDetails.add(new ArrayList<String>());
 		leagueDetails.add(new ArrayList<String>());
 
-		leagueTeams.add(new ArrayList<Integer>()); 
-		leagueTeams.add(new ArrayList<String>());
+		fixtureDetails.add(new ArrayList<String>());
+		fixtureDetails.add(new ArrayList<String>());
+		fixtureDetails.add(new ArrayList<String>());
 
-		fixtureDetails.add(new ArrayList<Integer>());
-		fixtureDetails.add(new ArrayList<Integer>());
-		fixtureDetails.add(new ArrayList<Integer>());
-
-		resultDetails.add(new ArrayList<Integer>());
 		resultDetails.add(new ArrayList<String>());
-		resultDetails.add(new ArrayList<Integer>());
+		resultDetails.add(new ArrayList<String>());
+		resultDetails.add(new ArrayList<String>());
 
 		if( !loadFileToArray("admins.txt", adminDetails) ){
 			JOptionPane.showMessageDialog(null, "Admin file could not be loaded.", "Warning", JOptionPane.WARNING_MESSAGE);
