@@ -17,6 +17,8 @@ public class leagueProject{
     private static int leagueIndex = -1;
     private static int leagueID = -1;
     private static String leagueTitle = "";
+    // Let program know when to refresh league data
+    private static boolean refreshLeagueData = true;
 
     private static Scanner in;
     private static FileWriter fw;
@@ -285,10 +287,11 @@ public class leagueProject{
 
         while( addingTeams ){
             teamName = inputItem("team name", "next");
-            if( !teamName.isEmpty() ){
-                leagueTeams.add(teamName);
-            } else {
+
+            if( teamName == null || teamName.isEmpty() ){
                 addingTeams = false;
+            } else {
+                leagueTeams.add(teamName);
             }
         }
 
@@ -471,11 +474,29 @@ public class leagueProject{
          *
          * calls showMenuOptions() method
          */
-        // Display options about which part of the league needs to be changed
-        leagueID = Integer.valueOf(leagueDetails.get(1).get(leagueIndex));
-        leagueTitle = leagueDetails.get(2).get(leagueIndex);
 
-        String menuOptions = "League : "+ leagueTitle +"\n\n0 : Edit League Title\n1 : Edit / Input League Teams\n2 : Edit / Input League Results\n3 : Generate Fixtures\n4 : Delete League\n5 : Exit league editor";
+        boolean teamsLoaded = false,
+                fixturesLoaded = false,
+                resultsLoaded = false;
+
+        // Display options about which part of the league needs to be changed
+
+        // Check if user has changed league they wish to edit
+        if( refreshLeagueData ){
+            leagueID = Integer.valueOf(leagueDetails.get(1).get(leagueIndex));
+            leagueTitle = leagueDetails.get(2).get(leagueIndex);
+
+            // empty out arrays
+            leagueTeams.clear();
+            clearArray(fixtureDetails, null);
+            clearArray(resultDetails, null);
+
+            teamsLoaded = loadFileToArray(leagueID + "_teams", null, leagueTeams);
+            fixturesLoaded = loadFileToArray(leagueID + "_fixtures", fixtureDetails, null);
+            resultsLoaded = loadFileToArray(leagueID + "_results", resultDetails, null);
+        }
+
+        String menuOptions = "League : "+ leagueTitle +"\n\n0 : Edit League Title\n1 : Edit / Input League Teams\n2 : Edit / Input League Results\n3 : Generate Fixtures\n4 : Generate Results Table\n5 : Delete League\n6 : Exit league editor";
         String option = JOptionPane.showInputDialog(null, menuOptions);
 
         switch( Integer.parseInt(option) ){
@@ -489,38 +510,40 @@ public class leagueProject{
                 editLeague();
                 break;
             case 1:
-                // Load teams from file to array
-                leagueTeams.clear();
-                loadFileToArray(leagueID + "_teams", null, leagueTeams);
                 editLeagueTeams();
                 break;
             case 2:
-                leagueTeams.clear();
-                loadFileToArray(leagueID + "_teams", null, leagueTeams);
-                clearArray(fixtureDetails, null);
-                loadFileToArray(leagueID + "_fixtures", fixtureDetails, null);
-                if( loadFileToArray(leagueID + "_results", resultDetails, null) ){
-                    System.out.println("Editing league results");
-                    editLeagueResults();
-                } else {
-                    if( loadFileToArray(leagueID + "_fixtures", fixtureDetails, null) ){
-                        // Fixtures loaded
-                        System.out.println("Entering league results");
-                        enterLeagueResults();
+                // Edit / Enter league results
+                if( teamsLoaded && leagueTeams.size() >= 2 ){
+                    if( resultsLoaded ){
+                        System.out.println("Editing league results");
+                        editLeagueResults();
                     } else {
-                        // No fixtures generated for league
-                        JOptionPane.showMessageDialog(null, "No fixtures found for current league. Auto generating fixtures.");
-                        generateFixtures();
+                        if( fixturesLoaded ){
+                            // Fixtures loaded
+                            System.out.println("Entering league results");
+                            enterLeagueResults();
+                        } else {
+                            // No fixtures generated for league
+                            JOptionPane.showMessageDialog(null, "No fixtures found for current league. Auto generating fixtures.");
+                            generateFixtures();
+                        }
                     }
+                } else {
+                    JOptionPane.showMessageDialog(null, "You need at least 2 teams in your league.");
+                    editLeagueTeams();
                 }
                 break;
             case 3:
                 leagueTeams.clear();
                 loadFileToArray(leagueID + "_teams", null, leagueTeams);
+                deleteFile(leagueID + "_fixtures");
                 generateFixtures();
                 break;
             case 4:
                 loadFileToArray(leagueID + "_results", resultDetails, null);
+                loadFileToArray(leagueID + "_fixtures", fixtureDetails, null);
+                loadFileToArray(leagueID + "_teams", null, leagueTeams);
                 generateResultsTable();
                 break;
             case 5:
@@ -560,7 +583,35 @@ public class leagueProject{
         int[] scores = {1, 3, 0};
 
         for( int i = 0; i < resultDetails.get(0).size(); i++ ){
-            
+            int matchID = Integer.parseInt( resultDetails.get(0).get(i) ),
+                resultType = Integer.parseInt( resultDetails.get(1).get(i) );
+
+            int team1 = Integer.parseInt( fixtureDetails.get(1).get(matchID) ),
+                team2 = Integer.parseInt( fixtureDetails.get(2).get(matchID) );
+
+            switch(resultType){
+                case 0:
+                    // draw
+                    teamScore[team1] += scores[0];
+                    teamScore[team2] += scores[0];
+                    break;
+                case 1:
+                    // team1 win
+                    teamScore[team1] += scores[1];
+                    // in case losing team is deducted points
+                    teamScore[team2] += scores[2];
+                    break;
+                case 2:
+                    teamScore[team2] += scores[1];
+                    // in case losing team is deducted points
+                    teamScore[team1] += scores[2];
+                    // team2 win
+                    break;
+            }
+        }
+
+        for( int i = 0; i < teamScore.length; i++ ){
+            System.out.println("Team " + i + " scored : " + teamScore[i] + " points.");
         }
 
         // Check that results have been entered for selected league
@@ -657,6 +708,7 @@ public class leagueProject{
          * showMenuOptions() method displays a list of actions to the user
          * e.g. show list of leagues managed by current admin, showLeagues()
          */
+        String pattern = "[0-9]{1}";
         String options = "";
 
         options += "What do you want to do?\n";
@@ -665,25 +717,26 @@ public class leagueProject{
         options += "2: Exit";
 
         String selection = JOptionPane.showInputDialog(null, options);
-        switch(Integer.parseInt(selection)){
-            case 0:
-                if( leagueDetails.get(0).contains(Integer.toString(adminID)) ){
-                    showLeagues();
-                } else {
-                    JOptionPane.showMessageDialog(null, "No leagues found. Please create a new league.");
-                    showMenuOptions();
-                }
-                break;
-            case 1:
-                createNewLeague();
-                break;
-            case 2:
-                System.exit(0);
-                break;
-            default:
-                showMenuOptions();
-                break;
+
+        if( selection != null && selection.matches(pattern) ){
+            switch(Integer.parseInt(selection)){
+                case 0:
+                    if( leagueDetails.get(0).contains(Integer.toString(adminID)) ){
+                        showLeagues();
+                    } else {
+                        JOptionPane.showMessageDialog(null, "No leagues found. Please create a new league.");
+                        showMenuOptions();
+                    }
+                    break;
+                case 1:
+                    createNewLeague();
+                    break;
+                case 2:
+                    System.exit(0);
+                    break;
+            }
         }
+        showMenuOptions();
     }
 
     public static void showLeagues() throws Exception{
