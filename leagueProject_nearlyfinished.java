@@ -82,6 +82,7 @@ public class leagueProject{
                     }
                 }
             }
+            in.close();
             return true;
         }
         return false;
@@ -219,15 +220,9 @@ public class leagueProject{
         leagueDetails.get(1).remove(leagueID);
         leagueDetails.get(2).remove(leagueID);
 
-        if( !deleteFile(leagueID + "_results") ){
-            System.out.println("File : " + leagueID + "_results not removed");
-        }
-        if( !deleteFile(leagueID + "_teams") ){
-            System.out.println("File : " + leagueID + "_teams not removed");
-        }
-        if( !deleteFile(leagueID + "_fixtures") ){
-            System.out.println("File : " + leagueID + "_fixtures not removed");
-        }
+        deleteFile(leagueID + "_results");
+        deleteFile(leagueID + "_teams");
+        deleteFile(leagueID + "_fixtures");
         saveArrayToFile("leagues", leagueDetails, null);
     }
 
@@ -266,7 +261,7 @@ public class leagueProject{
                 }
             } else {
                 if( escape == null ){
-                    return "";
+                    return null;
                 }
                 JOptionPane.showMessageDialog(null, "Please enter a valid "+ item +" (a-z 0-9 _ - allowed only)");
             }
@@ -499,75 +494,83 @@ public class leagueProject{
         String menuOptions = "League : "+ leagueTitle +"\n\n0 : Edit League Title\n1 : Edit / Input League Teams\n2 : Edit / Input League Results\n3 : Generate Fixtures\n4 : Generate Results Table\n5 : Delete League\n6 : Exit league editor";
         String option = JOptionPane.showInputDialog(null, menuOptions);
 
-        switch( Integer.parseInt(option) ){
-            case 0:
-                String newTitle = inputItem("league title (currently '" + leagueTitle + "'", null);
-                if( newTitle.isEmpty() ){
-                    editLeague();
-                }
-                leagueDetails.get(2).set(leagueIndex, newTitle);
-                saveArrayToFile("leagues", leagueDetails, null);
-                editLeague();
-                break;
-            case 1:
-                editLeagueTeams();
-                break;
-            case 2:
-                // Edit / Enter league results
-                if( teamsLoaded && leagueTeams.size() >= 2 ){
-                    if( resultsLoaded ){
-                        System.out.println("Editing league results");
-                        editLeagueResults();
-                    } else {
-                        if( fixturesLoaded ){
-                            // Fixtures loaded
-                            System.out.println("Entering league results");
-                            enterLeagueResults();
-                        } else {
-                            // No fixtures generated for league
-                            JOptionPane.showMessageDialog(null, "No fixtures found for current league. Auto generating fixtures.");
-                            generateFixtures();
-                        }
+        if( option != null ){
+            switch( Integer.parseInt(option) ){
+                case 0:
+                    // Edit league title
+                    // Get new league title from user
+                    String newTitle = inputItem("league title (currently '" + leagueTitle + "'", null);
+                    // Validate new title
+                    if( newTitle.isEmpty() ){
+                        editLeague();
                     }
-                } else {
-                    JOptionPane.showMessageDialog(null, "You need at least 2 teams in your league.");
-                    editLeagueTeams();
-                }
-                break;
-            case 3:
-                leagueTeams.clear();
-                loadFileToArray(leagueID + "_teams", null, leagueTeams);
-                deleteFile(leagueID + "_fixtures");
-                generateFixtures();
-                break;
-            case 4:
-                loadFileToArray(leagueID + "_results", resultDetails, null);
-                loadFileToArray(leagueID + "_fixtures", fixtureDetails, null);
-                loadFileToArray(leagueID + "_teams", null, leagueTeams);
-                generateResultsTable();
-                break;
-            case 5:
-                deleteLeague();
-                break;
-            case 6:
-                showMenuOptions();
-                break;
+
+                    // Update title
+                    leagueDetails.get(2).set(leagueIndex, newTitle);
+                    // Save updated title to file
+                    saveArrayToFile("leagues", leagueDetails, null);
+                    // Display edit league options
+                    editLeague();
+                    break;
+                case 1:
+                    int confirm = JOptionPane.showConfirmDialog(null, "Notice : Editing teams will remove all current fixture and result data for this league. Is that ok?", "Edit teams notice", JOptionPane.OK_CANCEL_OPTION);
+
+                    if( confirm == 0 ){
+                        // Clear fixtures and results to stop old data from creating bugs
+                        clearArray(fixtureDetails, null);
+                        clearArray(resultDetails, null);
+                        deleteFile(leagueID + "_fixtures");
+                        deleteFile(leagueID + "_results");
+                        editLeagueTeams();
+                    } else {
+                        editLeague();
+                    }
+                    break;
+                case 2:
+                    // Edit / Enter league results
+                    // Check that league teams have been loaded and league consists of at least 2 teams
+                    if( teamsLoaded && leagueTeams.size() >= 2 ){
+                        if( resultsLoaded ){
+                            // Allow user to edit league results
+                            editLeagueResults();
+                        } else {
+                            // Results file could not be loaded
+                            if( fixturesLoaded ){
+                                // Allow user to enter league results
+                                enterLeagueResults();
+                            } else {
+                                // Fixtures could not be loaded
+                                // Generate fixtures for league
+                                JOptionPane.showMessageDialog(null, "No fixtures found for current league. Auto generating fixtures.");
+                                generateFixtures();
+                                enterLeagueResults();
+                            }
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "You need at least 2 teams in your league.");
+                        editLeagueTeams();
+                    }
+                    break;
+                case 3:
+                    clearArray(fixtureDetails, null);
+                    deleteFile(leagueID + "_fixtures");
+                    generateFixtures();
+                    break;
+                case 4:
+                    generateResultsTable();
+                    break;
+                case 5:
+                    deleteLeague();
+                    break;
+                case 6:
+                    showMenuOptions();
+                    break;
+            }
+        } else {
+            showMenuOptions();
         }
 
         editLeague();
-
-        // Title
-        // Ask user to input new title
-
-        // Teams
-        // Allow user to remove teams from arraylist
-        // Allow user to add teams to arraylist
-
-        // Results
-        // Loop through each game
-        // Display result
-        // Ask user if they want to change it
-        // Allow user to skip to end of list and finish editing
     }
 
     public static void generateResultsTable(){
@@ -578,9 +581,15 @@ public class leagueProject{
         }
 
         int[] teamScore = new int[leagueTeams.size()];
+        int[] teams = new int[leagueTeams.size()];
 
         // Draw, Win, Loss
         int[] scores = {1, 3, 0};
+
+        // Populate teams array
+        for( int i = 0; i < teams.length; i++ ){
+            teams[i] = i;
+        }
 
         for( int i = 0; i < resultDetails.get(0).size(); i++ ){
             int matchID = Integer.parseInt( resultDetails.get(0).get(i) ),
@@ -689,18 +698,24 @@ public class leagueProject{
 
         saveArrayToFile(leagueID + "_fixtures", fixtureDetails, null);
 
+        JOptionPane.showMessageDialog(null, "Fixtures have been sucessfully generated.");
+
         editLeague();
     }
 
-    public static boolean deleteFile(String fileName){
+    public static void deleteFile(String fileName){
         /**
          * deleteFile() method deletes a file
          */
-        File file = new File(fileName + ".txt");
+
+        System.out.println("Deleting file : " + fileName + ".txt");
+        File file = new File("./" + fileName + ".txt");
         if( file.exists() ){
-            file.delete();
+            System.out.println("File exitst");
+            if( file.delete() ){
+                System.out.println("Done");
+            }
         }
-        return true;
     }
 
     public static void showMenuOptions() throws Exception{
@@ -766,6 +781,11 @@ public class leagueProject{
                 optionArr,
                 optionArr[0]).toString();
         if( selection != null ){
+            if( leagueIndex != leagueDetails.get(2).indexOf(selection) ){
+                // User has changed league
+                // refresh data from files for this league
+                refreshLeagueData = true;
+            }
             leagueIndex = leagueDetails.get(2).indexOf(selection);
             editLeague();
         }
