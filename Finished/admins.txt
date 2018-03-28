@@ -1,0 +1,2 @@
+0,adam,password
+1,vanco,de_shoe_man
