@@ -162,6 +162,7 @@ public class leagueProject{
         deleteFile(leagueID + "_results");
         deleteFile(leagueID + "_teams");
         deleteFile(leagueID + "_fixtures");
+        deleteFile(leagueID + "_resultsTable");
         saveArrayToFile("leagues", leagueDetails, null);
     }
 
